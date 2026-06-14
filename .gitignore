@@ -1,14 +1,15 @@
 .DS_Store
-.venv/
-__pycache__/
-.ruff_cache/
-.pytest_cache/
 .lycheecache
-.mypy_cache/
-bin/*
+
+# Go
+bin/
 !bin/
 !bin/git
 !bin/rm
+
+# Agent-skills runtime
 plugins/agent-skills/skills/.system/
-dist/
+
+# Node (markdownlint)
 node_modules/
+dist/

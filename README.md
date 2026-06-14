@@ -47,21 +47,6 @@ $skill-installer matthew-a-carr/ai-plugins/plugins/agent-skills
 npx skills@latest add matthew-a-carr/ai-plugins/plugins/agent-skills
 ```
 
-### Symlink loop (live updates via `git pull`)
-
-```bash
-for plugin in plugins/*/; do
-  for skill in "$plugin"skills/*/; do
-    [ -d "$skill" ] || continue
-    name=$(basename "$skill")
-    for dir in ~/.claude/skills ~/.agents/skills ~/.cursor/skills ~/.gemini/skills; do
-      mkdir -p "$dir"
-      ln -sf "$(pwd)/$skill" "$dir/$name"
-    done
-  done
-done
-```
-
 ## Repo structure
 
 ```

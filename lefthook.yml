@@ -1,0 +1,61 @@
+# lefthook.yml — Git hooks for the ai-plugins monorepo.
+# Install once: lefthook install
+# Run on demand: lefthook run pre-commit
+
+pre-commit:
+  parallel: true
+  commands:
+    validate-plugins:
+      glob: "plugins/*/.claude-plugin/plugin.json"
+      run: go run ./cmd/validate-plugins
+
+    check-naming:
+      glob: "**/*.md"
+      run: go run ./cmd/check-naming
+
+    skill-validator:
+      glob: "plugins/agent-skills/skills/**"
+      root: "plugins/agent-skills/"
+      run: >-
+        go tool skill-validator check skills/;
+        rc=$?;
+        if [ "$rc" -gt 1 ] && [ "$rc" -le 2 ]; then exit 0; fi;
+        exit "$rc"
+
+    markdownlint:
+      glob: "**/*.md"
+      exclude: "**/CHANGELOG.md"
+      run: npx --yes markdownlint-cli2@0.18.1 {staged_files}
+
+    trailing-whitespace:
+      glob: "**/*.{md,json,yml,yaml,toml,go}"
+      run: >-
+        for f in {staged_files}; do
+          if grep -qP '\s+$' "$f" 2>/dev/null; then
+            echo "trailing whitespace: $f";
+            exit 1;
+          fi;
+        done
+
+    check-json:
+      glob: "**/*.json"
+      run: >-
+        for f in {staged_files}; do
+          python3 -m json.tool "$f" > /dev/null 2>&1 ||
+          { echo "invalid JSON: $f"; exit 1; };
+        done
+
+    check-yaml:
+      glob: "**/*.{yml,yaml}"
+      run: >-
+        for f in {staged_files}; do
+          python3 -c "import yaml; yaml.safe_load(open('$f'))" 2>/dev/null ||
+          { echo "invalid YAML: $f"; exit 1; };
+        done
+
+commit-msg:
+  commands:
+    conventional-commits:
+      run: >-
+        head -1 {1} | grep -qE '^(feat|fix|refactor|build|ci|chore|docs|style|perf|test)(\(.+\))?(!)?\: .+' ||
+        { echo "Commit message must follow Conventional Commits: type(scope): description"; exit 1; }

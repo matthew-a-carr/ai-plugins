@@ -9,8 +9,8 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
-  validate-skills:
-    name: Skill spec compliance
+  validate:
+    name: Validate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
@@ -19,7 +19,15 @@ jobs:
         with:
           go-version: stable
           cache: true
-          cache-dependency-path: plugins/agent-skills/go.sum
+
+      - name: Run tests
+        run: go test ./tools/...
+
+      - name: Validate plugin.json manifests
+        run: go run ./cmd/validate-plugins
+
+      - name: Check naming conventions
+        run: go run ./cmd/check-naming
 
       - name: Validate skills (agent-skills)
         working-directory: plugins/agent-skills
@@ -31,28 +39,5 @@ jobs:
           if [ "$rc" -gt 1 ] && [ "$rc" -le 2 ]; then exit 0; fi
           exit "$rc"
 
-  validate-principles:
-    name: Pre-commit & principles validation
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Install uv
-        uses: astral-sh/setup-uv@v7
-        with:
-          version: "latest"
-
-      - name: Set up Python
-        run: uv python install
-
-      - name: Run pre-commit
-        run: uvx pre-commit run --all-files --show-diff-on-failure
-
-      - name: Unit tests
-        run: uv run pytest
-
-      - name: Validate plugin.json (agent-skills)
-        run: uv run plugins/engineering-principles/scripts/validate_plugin.py plugins/agent-skills/.claude-plugin/plugin.json
-
-      - name: Validate plugin.json (engineering-principles)
-        run: uv run plugins/engineering-principles/scripts/validate_plugin.py plugins/engineering-principles/.claude-plugin/plugin.json
+      - name: Lint markdown
+        run: npx --yes markdownlint-cli2@0.18.1 "**/*.md" "#**/CHANGELOG.md" "#node_modules"

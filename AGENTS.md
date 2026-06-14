@@ -65,14 +65,12 @@ Work style: telegraph; noun-phrases ok; drop grammar; min tokens.
 ## Local setup
 
 ```sh
-uv sync                                                  # creates .venv, installs pre-commit
-uvx pre-commit install --hook-type pre-commit --hook-type commit-msg
-uvx pre-commit run --all-files                           # full sweep
-uv run pytest                                            # unit tests
-uv run ruff check                                        # Python lint
+go test ./tools/...                                       # unit tests
+go run ./cmd/validate-plugins                             # validate all plugin.json
+go run ./cmd/check-naming                                 # naming conventions
+lefthook install                                          # git hooks (optional)
 ```
 
-Symlink loop in README links every skill into `~/.{claude,agents,cursor,gemini}/skills/`. Edits to the working tree go live immediately for every agent.
 
 ## Critical thinking
 
