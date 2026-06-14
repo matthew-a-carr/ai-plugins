@@ -36,4 +36,4 @@ jobs:
           exit "$rc"
 
       - name: Lint markdown
-        run: npx --yes markdownlint-cli2@0.18.1 "**/*.md" "#**/CHANGELOG.md" "#node_modules"
+        run: go run ./cmd/check-markdown

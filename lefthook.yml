@@ -13,6 +13,10 @@ pre-commit:
       glob: "**/*.md"
       run: go run ./cmd/check-naming
 
+    check-markdown:
+      glob: "**/*.md"
+      run: go run ./cmd/check-markdown
+
     skill-validator:
       glob: "plugins/agent-skills/skills/**"
       root: "plugins/agent-skills/"
@@ -21,37 +25,6 @@ pre-commit:
         rc=$?;
         if [ "$rc" -gt 1 ] && [ "$rc" -le 2 ]; then exit 0; fi;
         exit "$rc"
-
-    markdownlint:
-      glob: "**/*.md"
-      exclude: "**/CHANGELOG.md"
-      run: npx --yes markdownlint-cli2@0.18.1 {staged_files}
-
-    trailing-whitespace:
-      glob: "**/*.{md,json,yml,yaml,toml,go}"
-      run: >-
-        for f in {staged_files}; do
-          if grep -qP '\s+$' "$f" 2>/dev/null; then
-            echo "trailing whitespace: $f";
-            exit 1;
-          fi;
-        done
-
-    check-json:
-      glob: "**/*.json"
-      run: >-
-        for f in {staged_files}; do
-          python3 -m json.tool "$f" > /dev/null 2>&1 ||
-          { echo "invalid JSON: $f"; exit 1; };
-        done
-
-    check-yaml:
-      glob: "**/*.{yml,yaml}"
-      run: >-
-        for f in {staged_files}; do
-          python3 -c "import yaml; yaml.safe_load(open('$f'))" 2>/dev/null ||
-          { echo "invalid YAML: $f"; exit 1; };
-        done
 
 commit-msg:
   commands:
