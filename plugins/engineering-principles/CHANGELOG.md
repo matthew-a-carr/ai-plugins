@@ -4,6 +4,23 @@ All notable changes to this repo are documented here.
 Format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/);
 this repo follows [SemVer](https://semver.org/) for the plugin.
 
+## [2.0.0](https://github.com/matthew-a-carr/ai-plugins/compare/engineering-principles-v1.0.0...engineering-principles-v2.0.0) (2026-06-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* Python toolchain no longer required. Go is the only runtime.
+* consumers must update marketplace URL from matthew-a-carr/claude-plugins to matthew-a-carr/ai-plugins
+
+### Features
+
+* consolidate claude-plugins, agent-skills, engineering-principles into monorepo ([e0578e7](https://github.com/matthew-a-carr/ai-plugins/commit/e0578e77f312d32841d300f72d688097bb81f49d))
+
+
+### Code Refactoring
+
+* replace Python tooling with Go ([ab4a100](https://github.com/matthew-a-carr/ai-plugins/commit/ab4a100bfd6a4e5bec3b3b65895946d856caae53))
+
 ## [1.1.1](https://github.com/matthew-a-carr/engineering-principles/compare/v1.1.0...v1.1.1) (2026-06-14)
 
 

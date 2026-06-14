@@ -1,5 +1,22 @@
 # Changelog
 
+## [2.0.0](https://github.com/matthew-a-carr/ai-plugins/compare/agent-skills-v1.0.0...agent-skills-v2.0.0) (2026-06-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* Python toolchain no longer required. Go is the only runtime.
+* consumers must update marketplace URL from matthew-a-carr/claude-plugins to matthew-a-carr/ai-plugins
+
+### Features
+
+* consolidate claude-plugins, agent-skills, engineering-principles into monorepo ([e0578e7](https://github.com/matthew-a-carr/ai-plugins/commit/e0578e77f312d32841d300f72d688097bb81f49d))
+
+
+### Code Refactoring
+
+* replace Python tooling with Go ([ab4a100](https://github.com/matthew-a-carr/ai-plugins/commit/ab4a100bfd6a4e5bec3b3b65895946d856caae53))
+
 ## [3.0.0](https://github.com/matthew-a-carr/dev-skills/compare/v2.0.0...v3.0.0) (2026-06-14)
 
 
