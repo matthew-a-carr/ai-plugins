@@ -1,6 +1,6 @@
 module github.com/matthew-a-carr/ai-plugins/plugins/agent-skills
 
-go 1.25.5
+go 1.26.4
 
 tool github.com/agent-ecosystem/skill-validator/cmd/skill-validator
 
