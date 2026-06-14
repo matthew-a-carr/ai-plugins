@@ -15,9 +15,9 @@ Thanks for considering a contribution. This repo is the source of engineering pr
 ## Local setup
 
 ```sh
-uv sync
-uvx pre-commit install --hook-type pre-commit --hook-type commit-msg
-uvx pre-commit run --all-files
+go run ./tools/check-naming
+go run ./tools/check-markdown
+lefthook install
 ```
 
 CI runs the same hooks.
