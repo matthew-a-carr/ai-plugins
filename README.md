@@ -64,7 +64,7 @@ ai-plugins/
 │       └── hooks/
 ├── .github/workflows/                # Unified CI
 ├── release-please-config.json        # Multi-package release-please
-└── pyproject.toml                    # Python tooling (pre-commit, lint)
+└── tools/                            # Go tools (mdcheck, namecheck, etc)
 ```
 
 Attribution for forked skills: see [`plugins/agent-skills/skills/ATTRIBUTION.md`](plugins/agent-skills/skills/ATTRIBUTION.md).
