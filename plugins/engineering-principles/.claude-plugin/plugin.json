@@ -1,0 +1,11 @@
+{
+  "name": "engineering-principles",
+  "version": "1.1.1",
+  "description": "Engineering principles for any backend chapter: DDD, clean architecture, cloud-native, security, reliability, SRE, behavioural rules for AI assistants, and on-demand skills (apply-principles, architecture-review).",
+  "author": {
+    "name": "Matthew Carr",
+    "url": "https://github.com/matthew-a-carr"
+  },
+  "homepage": "https://github.com/matthew-a-carr/engineering-principles",
+  "license": "MIT"
+}

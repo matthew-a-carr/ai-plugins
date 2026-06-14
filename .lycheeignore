@@ -1,0 +1,8 @@
+# Skip these patterns from link checking.
+# Local cross-refs inside the plugin install directory — checked by relative path resolution, not HTTP.
+^plugins/engineering-principles/principles/
+^plugins/engineering-principles/patterns/
+^plugins/engineering-principles/skills/
+^plugins/agent-skills/skills/
+# GitHub repos we reference that may rate-limit unauth requests in CI.
+# (lychee retries; entries here are escape hatches if a host gets flaky.)

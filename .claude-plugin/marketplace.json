@@ -1,0 +1,39 @@
+{
+  "name": "matthew-a-carr",
+  "owner": {
+    "name": "Matthew Carr",
+    "url": "https://github.com/matthew-a-carr"
+  },
+  "metadata": {
+    "description": "Marketplace catalog for Matthew Carr's AI agent plugins.",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "engineering-principles",
+      "description": "Cross-repo engineering principles, patterns, and skills (apply-principles, architecture-review, enforce-principles).",
+      "source": {
+        "source": "github",
+        "repo": "matthew-a-carr/ai-plugins",
+        "path": "plugins/engineering-principles"
+      },
+      "author": {
+        "name": "Matthew Carr",
+        "url": "https://github.com/matthew-a-carr"
+      }
+    },
+    {
+      "name": "agent-skills",
+      "description": "Personal agent skills: development workflow, planning, GitHub helpers, and utilities.",
+      "source": {
+        "source": "github",
+        "repo": "matthew-a-carr/ai-plugins",
+        "path": "plugins/agent-skills"
+      },
+      "author": {
+        "name": "Matthew Carr",
+        "url": "https://github.com/matthew-a-carr"
+      }
+    }
+  ]
+}

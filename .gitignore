@@ -1,0 +1,14 @@
+.DS_Store
+.venv/
+__pycache__/
+.ruff_cache/
+.pytest_cache/
+.lycheecache
+.mypy_cache/
+bin/*
+!bin/
+!bin/git
+!bin/rm
+plugins/agent-skills/skills/.system/
+dist/
+node_modules/

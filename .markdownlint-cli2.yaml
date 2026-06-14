@@ -1,0 +1,22 @@
+# Markdownlint config. Strict enough to catch real issues, lax enough
+# not to fight the way these reference docs are written.
+config:
+  # Line length: principles docs frequently exceed 80 chars deliberately.
+  MD013: false
+  # Allow multiple headings with the same content (Patterns reuse "Shape", "References", etc.).
+  MD024:
+    siblings_only: true
+  # Allow inline HTML — used sparingly for tables / spans where needed.
+  MD033: false
+  # First line doesn't have to be a top-level heading (frontmatter is fine).
+  MD041: false
+  # Bare URLs are fine in reference sections.
+  MD034: false
+
+globs:
+  - "**/*.md"
+
+ignores:
+  - "node_modules/**"
+  - ".git/**"
+  - "**/CHANGELOG.md"

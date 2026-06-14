@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+jobs:
+  validate-skills:
+    name: Skill spec compliance
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-go@v6
+        with:
+          go-version: stable
+          cache: true
+          cache-dependency-path: plugins/agent-skills/go.sum
+
+      - name: Validate skills (agent-skills)
+        working-directory: plugins/agent-skills
+        run: |
+          set +e
+          go tool skill-validator check --emit-annotations skills/
+          rc=$?
+          go tool skill-validator check -o markdown skills/ >> "$GITHUB_STEP_SUMMARY"
+          if [ "$rc" -gt 1 ] && [ "$rc" -le 2 ]; then exit 0; fi
+          exit "$rc"
+
+  validate-principles:
+    name: Pre-commit & principles validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "latest"
+
+      - name: Set up Python
+        run: uv python install
+
+      - name: Run pre-commit
+        run: uvx pre-commit run --all-files --show-diff-on-failure
+
+      - name: Unit tests
+        run: uv run pytest
+
+      - name: Validate plugin.json (agent-skills)
+        run: uv run plugins/engineering-principles/scripts/validate_plugin.py plugins/agent-skills/.claude-plugin/plugin.json
+
+      - name: Validate plugin.json (engineering-principles)
+        run: uv run plugins/engineering-principles/scripts/validate_plugin.py plugins/engineering-principles/.claude-plugin/plugin.json

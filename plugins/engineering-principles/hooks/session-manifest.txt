@@ -1,0 +1,26 @@
+engineering-principles plugin is installed in this session.
+
+Reference docs live under $CLAUDE_PLUGIN_ROOT and are NOT auto-loaded.
+Read them with the Read tool when the work calls for them. Relative paths
+cited in the tier files (e.g. "patterns/idempotency.md") resolve under
+$CLAUDE_PLUGIN_ROOT — NOT the consuming repo's working directory.
+
+  behavioural-rules.md           Rules 1–9 for AI agents
+  principles/values.md           Six values (read first when forming intent)
+  principles/index.md            Routing table — kind + applicability per anchor
+  principles/constitution.md     Tier 1 — universal principles (P1–P33)
+  principles/cloud-native.md     Tier 2 — deployment principles (C1–C…)
+  principles/tech-stack.md       Tier 3 — chapter stack choices (T1–T…)
+  patterns/<name>.md             Code recipes cited by anchor from the tiers
+  AGENTS.md                      Repo-wide read order, writeback policy
+
+Skills exposed by this plugin (invoke as `/<name>` or via the Skill tool):
+  engineering-principles:architecture-review   Review a PR diff against the principles
+  engineering-principles:apply-principles      Ground a code change before writing
+  engineering-principles:enforce-principles    Turn applicable anchors into CI gates
+
+Precedence when tiers conflict: Tier 3 > Tier 2 > Tier 1, and the consuming
+project's own constitution/ADRs win over all tiers for recorded project-local
+decisions. Conflicts are bugs to surface (behavioural-rules.md Rule 6), not
+features to exploit. Cite by anchor (P5, C8, T3) — anchors are stable,
+wording isn't.
