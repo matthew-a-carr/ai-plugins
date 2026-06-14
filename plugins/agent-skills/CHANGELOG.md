@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/matthew-a-carr/ai-plugins/compare/agent-skills-v1.0.0...agent-skills-v2.0.0) (2026-06-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* **agent-skills:** removes the auto-merge-pr and grill-with-docs skills (merged into babysit-pr and grill-me respectively).
+
+### Features
+
+* **agent-skills:** consolidate overlapping skills, decouple lifecycle from travel-planner ([#3](https://github.com/matthew-a-carr/ai-plugins/issues/3)) ([6a0f0cb](https://github.com/matthew-a-carr/ai-plugins/commit/6a0f0cbbe4156c43d4cfc4ff4e239a9e8c51778d))
+
 ## [3.0.0](https://github.com/matthew-a-carr/dev-skills/compare/v2.0.0...v3.0.0) (2026-06-14)
 
 
