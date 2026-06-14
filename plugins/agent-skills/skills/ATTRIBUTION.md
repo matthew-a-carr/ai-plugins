@@ -7,8 +7,7 @@ Some skills in this directory originated in [mattpocock/skills](https://github.c
 | Skill in this repo | Upstream path |
 | --- | --- |
 | `tdd` | `skills/engineering/tdd/` |
-| `grill-me` | `skills/productivity/grill-me/` |
-| `grill-with-docs` | `skills/engineering/grill-with-docs/` |
+| `grill-me` | `skills/productivity/grill-me/` + `skills/engineering/grill-with-docs/` (merged) |
 | `handoff` | `skills/productivity/handoff/` |
 | `improve-codebase-architecture` | `skills/engineering/improve-codebase-architecture/` |
 | `setup-matt-carr-skills` | `skills/engineering/setup-matt-pocock-skills/` (renamed) |

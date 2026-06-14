@@ -1,9 +1,20 @@
 ---
 name: gh-copilot-address-pr
-description: Address GitHub Copilot PR review comments for a specific PR using gh CLI. Use when asked to implement or evaluate Copilot PR review comments, decide which to accept, apply changes, then commit and (on confirmation) push.
+description: Address GitHub Copilot (and other bot reviewer) PR review comments for a specific PR. Use when asked to implement or evaluate Copilot/bot PR review comments, decide which to accept, apply changes, then commit and (on confirmation) push. This is the canonical detect → triage → apply → reply → resolve-thread loop that `babysit-pr` delegates to for review feedback.
 ---
 
-# GitHub Copilot PR review comment workflow
+# Bot PR review comment workflow
+
+Owns the comment-triage discipline for PR review feedback (Copilot, Claude, Wiz,
+other `[bot]` reviewers). `babysit-pr` delegates here rather than re-deriving it.
+
+## Tool conventions
+
+GitHub I/O has two supported paths — use whichever the environment provides:
+`gh` CLI (interactive / local, shown below) or `mcp__github__*` MCP tools
+(scheduled / routine contexts, where `gh` has auth issues —
+anthropics/claude-code#42743). Pick one and stay consistent within a run;
+translate the `gh` commands below to their MCP equivalents as needed.
 
 ## Inputs
 
@@ -21,12 +32,12 @@ description: Address GitHub Copilot PR review comments for a specific PR using g
   - `gh pr view <num> -R owner/repo --json comments,files,number,title,url,headRefName`
 - Use `gh pr diff <num> -R owner/repo` for full context when needed.
 
-2) Isolate Copilot comments
-- Scan comments for Copilot login (often `Copilot` or contains `copilot`).
-- If unsure which reviewer is Copilot, ask user.
-- Optional filter: `gh api /repos/OWNER/REPO/pulls/NUM/comments --jq '.[] | select(.user.login|test("copilot";"i")) | {id,path,position,body,user}'` (skip if jq missing).
+2) Isolate bot comments
+- Scan comments for the bot login (Copilot is often `Copilot` / contains `copilot`; others: `claude`, `wiz`, `[bot]`).
+- If unsure which reviewer to act on, ask user.
+- Optional filter (default Copilot; widen the regex for other bots): `gh api /repos/OWNER/REPO/pulls/NUM/comments --jq '.[] | select(.user.login|test("copilot|claude|wiz|\\[bot\\]";"i")) | {id,path,position,body,user}'` (skip if jq missing).
 - Skip already-replied comments when possible (e.g., those with `in_reply_to_id`).
-- Ignore comments that are already resolved. Use GraphQL to fetch `reviewThreads` and filter out threads where `isResolved` is true; only act on unresolved Copilot threads.
+- Ignore comments that are already resolved. Use GraphQL to fetch `reviewThreads` and filter out threads where `isResolved` is true; only act on unresolved bot threads.
 
 3) Triage each comment
 - Read code context in file + surrounding lines.
@@ -44,7 +55,7 @@ description: Address GitHub Copilot PR review comments for a specific PR using g
 - Run relevant tests or checks if fast and configured.
 - If blocked, state what’s missing.
 
-6) Close the loop on Copilot comments
+6) Close the loop on the bot comments
 - For each accepted comment, add a reply noting it was addressed + reviewed.
 - If a review thread is open, resolve it after applying the fix.
 - Use gh API if needed:

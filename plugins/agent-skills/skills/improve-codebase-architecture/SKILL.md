@@ -65,7 +65,7 @@ Once the user picks a candidate, drop into a grilling conversation. Walk the des
 
 Side effects happen inline as decisions crystallize:
 
-- **Naming a deepened module after a concept not in the domain glossary?** If the repo keeps a `CONTEXT.md`, add the term there — same discipline as the `/grill-with-docs` skill (create it lazily). If the repo's domain language lives in `CONSTITUTION.md` / `AGENTS.md` instead, note the term for the human rather than inventing a glossary.
+- **Naming a deepened module after a concept not in the domain glossary?** If the repo keeps a `CONTEXT.md`, add the term there — same discipline as the `/grill-me` skill (create it lazily). If the repo's domain language lives in `CONSTITUTION.md` / `AGENTS.md` instead, note the term for the human rather than inventing a glossary.
 - **Sharpening a fuzzy term during the conversation?** Update the domain glossary right there if the repo has one.
-- **User rejects the candidate with a reason worth keeping?** Offer an ADR, framed as: _"Want me to record this as an ADR so future architecture reviews don't re-suggest it?"_ Only offer when the reason would actually be needed by a future explorer to avoid re-suggesting the same thing — skip ephemeral reasons ("not worth it right now") and self-evident ones. Use the repo's `write-adr` skill if it has one, else the `/grill-with-docs` ADR format template.
+- **User rejects the candidate with a reason worth keeping?** Offer an ADR, framed as: _"Want me to record this as an ADR so future architecture reviews don't re-suggest it?"_ Only offer when the reason would actually be needed by a future explorer to avoid re-suggesting the same thing — skip ephemeral reasons ("not worth it right now") and self-evident ones. Use the repo's `write-adr` skill if it has one, else the `/grill-me` ADR format template.
 - **Want to explore alternative interfaces for the deepened module?** See [INTERFACE-DESIGN.md](references/INTERFACE-DESIGN.md).

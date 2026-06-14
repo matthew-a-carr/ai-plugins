@@ -123,10 +123,13 @@ is where deviation logs go to die.
 
 ## Verify
 
-12. Run the full verification suite:
-    ```bash
-    pnpm lint && pnpm db:check:migrations && pnpm type-check && pnpm test:unit && pnpm test:integration
-    ```
+12. Run the full verification suite. Get the commands from the repo's config —
+    `docs/agents/verification.md` (the `setup-matt-carr-skills` injection point)
+    or a verification table in `AGENTS.md` / `CONSTITUTION.md`; if neither
+    exists, infer from the repo (`package.json` scripts, `Makefile`/`justfile`,
+    CI workflow). Run the full gate the repo defines: lint, type-check,
+    unit + integration tests, plus any repo-specific checks (migrations, etc.).
+    (Node example: `pnpm lint && pnpm type-check && pnpm test`.)
 13. If any check fails, attempt to fix it. **Retry the full suite up to 3
     times.** If still failing after 3 attempts, stop, apply `ai:blocked`
     to the impl PR (open it as draft first if needed), comment on the PR
@@ -135,19 +138,13 @@ is where deviation logs go to die.
     Do not skip tests or use `--no-verify` to push through. Do not
     silently delete or `.skip` failing tests (per behavioural-rules Rule 9
     — fail loud).
-14. Run e2e tests if the spec includes e2e acceptance criteria:
-    ```bash
-    pnpm test:e2e
-    ```
-    Mobile-only e2e (Maestro) does **not** run in cloud routines — that's
-    CI's job on a macOS runner (per ADR 055 and the apps/mobile/AGENTS.md
-    remote-only section). For mobile slices, the impl PR's `mobile-e2e`
-    CI job is the gate; the routine confirms the job is configured but
-    doesn't run Maestro locally.
-15. Verify the production build:
-    ```bash
-    POSTGRES_URL=postgresql://build:build@localhost:5432/build pnpm build
-    ```
+14. Run e2e tests if the spec includes e2e acceptance criteria, using the repo's
+    e2e command. Platform-specific e2e that can't run in the routine context
+    (e.g. mobile/device e2e on a dedicated runner) is **CI's** job — confirm the
+    relevant CI job is configured and treat it as the gate; the routine doesn't
+    run it locally.
+15. Verify the production build with the repo's build command (note any env it
+    needs, per the verification config).
 
 ## Close out — triage the notes file
 
@@ -181,10 +178,10 @@ This is the deliberate synthesis step the rolling log is designed for.
        any supersession status lines. If no trigger is met, note "no ADR — no
        trigger met" in the PR body rather than skipping silently (Rule 9).
     b. **Doc sync** — invoke the `sync-docs` skill: it walks the AGENTS.md
-       doc-review table over the changed paths and runs the load-bearing
-       generated-artifact checks (OpenAPI regen → `docs/openapi/v1.yaml`,
-       AGENTS.md/CLAUDE.md symlinks, ADR index, CHANGELOG). Patch any stale doc
-       in this branch.
+       doc-review table over the changed paths and runs the repo's load-bearing
+       generated-artifact checks (e.g. OpenAPI regen, AGENTS.md/CLAUDE.md
+       symlinks, ADR index, CHANGELOG — whatever that table lists). Patch any
+       stale doc in this branch.
 21. Update `docs/specs/README.md` index with the new status.
 22. **If this slice has a parent epic, update that epic** in the same
     commit:
@@ -217,10 +214,10 @@ working diff (self-review mode). Fix any **Critical** findings; carry
       slice 3/9 of EPIC-002; epic remains in progress."). Include a Notes
       section if `principles_unavailable=true`.
     - Label `ai:done` via `mcp__github__add_issue_labels`.
-26. For mobile slices, note in the PR body that physical-iPhone Expo Go
-    validation is **manual** (Matt does it before merging) — the routine
-    can't reach a physical device. CI's `mobile-e2e` job covers the
-    Simulator + Maestro gate.
+26. If acceptance needs validation the routine can't perform (e.g.
+    physical-device testing), note in the PR body that it's a **manual** gate
+    the human does before merging; the automated portion is covered by the
+    relevant CI job.
 
 The routine ends here. Matt reviews the PR and merges. On merge, the impl
 PR closes the SPEC's lifecycle automatically (the SPEC was already set to
