@@ -7,15 +7,15 @@ pre-commit:
   commands:
     validate-plugins:
       glob: "plugins/*/.claude-plugin/plugin.json"
-      run: go run ./cmd/validate-plugins
+      run: go run ./tools/validate-plugins
 
     check-naming:
       glob: "**/*.md"
-      run: go run ./cmd/check-naming
+      run: go run ./tools/check-naming
 
     check-markdown:
       glob: "**/*.md"
-      run: go run ./cmd/check-markdown
+      run: go run ./tools/check-markdown
 
     skill-validator:
       glob: "plugins/agent-skills/skills/**"

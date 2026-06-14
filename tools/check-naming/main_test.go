@@ -1,11 +1,9 @@
-package namecheck_test
+package main
 
 import (
 	"os"
 	"path/filepath"
 	"testing"
-
-	"github.com/matthew-a-carr/ai-plugins/tools/namecheck"
 )
 
 // scaffold creates a directory tree from a list of relative paths.
@@ -40,7 +38,7 @@ func TestLowercaseDirectoriesPass(t *testing.T) {
 		"plugins/agent-skills/skills/tdd/SKILL.md",
 	})
 
-	violations := namecheck.Check(root)
+	violations := check(root)
 	if len(violations) != 0 {
 		t.Fatalf("expected no violations, got %v", violations)
 	}
@@ -54,7 +52,7 @@ func TestUppercaseDirectoryFails(t *testing.T) {
 		"plugins/BadName/readme.md",
 	})
 
-	violations := namecheck.Check(root)
+	violations := check(root)
 	if len(violations) == 0 {
 		t.Fatal("expected violations for uppercase directory")
 	}
@@ -77,7 +75,7 @@ func TestKebabCaseMarkdownPasses(t *testing.T) {
 		"patterns/event-driven-outbox.md",
 	})
 
-	violations := namecheck.Check(root)
+	violations := check(root)
 	if len(violations) != 0 {
 		t.Fatalf("expected no violations, got %v", violations)
 	}
@@ -90,7 +88,7 @@ func TestNonKebabMarkdownFails(t *testing.T) {
 		"patterns/My_Pattern.md",
 	})
 
-	violations := namecheck.Check(root)
+	violations := check(root)
 	if len(violations) == 0 {
 		t.Fatal("expected violation for non-kebab markdown")
 	}
@@ -119,7 +117,7 @@ func TestEcosystemFilesAreAllowedAnywhere(t *testing.T) {
 		"plugins/engineering-principles/CHANGELOG.md",
 	})
 
-	violations := namecheck.Check(root)
+	violations := check(root)
 	if len(violations) != 0 {
 		t.Fatalf("expected no violations for ecosystem files, got %v", violations)
 	}
@@ -134,7 +132,7 @@ func TestHiddenDirsAreAllowed(t *testing.T) {
 		".claude-plugin/marketplace.json",
 	})
 
-	violations := namecheck.Check(root)
+	violations := check(root)
 	if len(violations) != 0 {
 		t.Fatalf("expected no violations for hidden dirs, got %v", violations)
 	}
@@ -150,7 +148,7 @@ func TestSkipDirsAreIgnored(t *testing.T) {
 		".git/objects/",
 	})
 
-	violations := namecheck.Check(root)
+	violations := check(root)
 	if len(violations) != 0 {
 		t.Fatalf("expected no violations inside skip dirs, got %v", violations)
 	}
@@ -165,7 +163,7 @@ func TestRootMarkdownKeepsCasing(t *testing.T) {
 		"CONTRIBUTING.md",
 	})
 
-	violations := namecheck.Check(root)
+	violations := check(root)
 	if len(violations) != 0 {
 		t.Fatalf("expected no violations for root markdown files, got %v", violations)
 	}
@@ -182,7 +180,7 @@ func TestNonMarkdownFilesAreIgnored(t *testing.T) {
 		"plugins/agent-skills/scripts/validate_skills.py",
 	})
 
-	violations := namecheck.Check(root)
+	violations := check(root)
 	if len(violations) != 0 {
 		t.Fatalf("expected no violations for non-md files, got %v", violations)
 	}
@@ -192,15 +190,15 @@ func TestMixedViolations(t *testing.T) {
 	root := t.TempDir()
 	scaffold(t, root, []string{
 		"plugins/",
-		"plugins/GoodPlugin/",          // uppercase dir — violation
+		"plugins/GoodPlugin/",
 		"patterns/",
-		"patterns/Bad_Name.md",          // not kebab — violation
-		"patterns/good-name.md",         // fine
+		"patterns/Bad_Name.md",
+		"patterns/good-name.md",
 		"plugins/ok-plugin/",
-		"plugins/ok-plugin/SKILL.md",    // ecosystem file — fine
+		"plugins/ok-plugin/SKILL.md",
 	})
 
-	violations := namecheck.Check(root)
+	violations := check(root)
 	if len(violations) != 2 {
 		t.Fatalf("expected 2 violations, got %d: %v", len(violations), violations)
 	}
@@ -217,7 +215,7 @@ func TestReferencesAllowScreamingKebab(t *testing.T) {
 		"plugins/my-skill/references/interface-design.md",
 	})
 
-	violations := namecheck.Check(root)
+	violations := check(root)
 	if len(violations) != 0 {
 		t.Fatalf("expected no violations for SCREAMING-KEBAB in references, got %v", violations)
 	}
@@ -235,7 +233,7 @@ func TestEvalsAreSkipped(t *testing.T) {
 		"plugins/my-skill/evals/scenario-0/inputs/_template.md",
 	})
 
-	violations := namecheck.Check(root)
+	violations := check(root)
 	if len(violations) != 0 {
 		t.Fatalf("expected no violations in evals, got %v", violations)
 	}

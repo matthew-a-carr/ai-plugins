@@ -1,8 +1,5 @@
-// Package namecheck enforces the repo's naming conventions:
-//   - All directories (except hidden/skip dirs) are lowercase.
-//   - All markdown files under subdirectories are lowercase, kebab-case.
-//   - Ecosystem-convention files keep their original casing anywhere.
-package namecheck
+// Command check-naming enforces directory and file naming conventions.
+package main
 
 import (
 	"fmt"
@@ -28,18 +25,18 @@ var ecosystemFiles = map[string]bool{
 
 // skipDirs are never scanned.
 var skipDirs = map[string]bool{
-	".git":           true,
-	"node_modules":   true,
-	".venv":          true,
-	"venv":           true,
-	"__pycache__":    true,
-	".pytest_cache":  true,
-	".ruff_cache":    true,
-	"dist":           true,
-	"build":          true,
-	".idea":          true,
-	".vscode":        true,
-	"evals":          true, // test fixture dirs — intentionally varied naming
+	".git":          true,
+	"node_modules":  true,
+	".venv":         true,
+	"venv":          true,
+	"__pycache__":   true,
+	".pytest_cache": true,
+	".ruff_cache":   true,
+	"dist":          true,
+	"build":         true,
+	".idea":         true,
+	".vscode":       true,
+	"evals":         true,
 }
 
 // allowedHiddenDirs are hidden directories we tolerate.
@@ -53,8 +50,8 @@ var kebabRE = regexp.MustCompile(`^[a-z0-9]+(-[a-z0-9]+)*\.md$`)
 var screamingKebabRE = regexp.MustCompile(`^[A-Z0-9]+(-[A-Z0-9]+)*\.md$`)
 var lowerDirRE = regexp.MustCompile(`^[a-z0-9][a-z0-9._-]*$`)
 
-// Check walks root and returns a list of naming convention violations.
-func Check(root string) []string {
+// check walks root and returns a list of naming convention violations.
+func check(root string) []string {
 	var violations []string
 
 	_ = filepath.WalkDir(root, func(path string, d os.DirEntry, err error) error {
@@ -68,12 +65,10 @@ func Check(root string) []string {
 		}
 		name := d.Name()
 
-		// Skip excluded trees.
 		if d.IsDir() && skipDirs[name] {
 			return filepath.SkipDir
 		}
 
-		// Check parts of the path for skip dirs (handles nested cases).
 		parts := strings.Split(rel, string(filepath.Separator))
 		for _, part := range parts {
 			if skipDirs[part] {
@@ -85,12 +80,10 @@ func Check(root string) []string {
 		}
 
 		if d.IsDir() {
-			// Allow known hidden dirs.
 			if strings.HasPrefix(name, ".") {
 				if allowedHiddenDirs[name] {
 					return nil
 				}
-				// Other hidden dirs — skip silently (e.g. .ruff_cache).
 				return filepath.SkipDir
 			}
 			if !lowerDirRE.MatchString(name) {
@@ -99,23 +92,19 @@ func Check(root string) []string {
 			return nil
 		}
 
-		// File checks: only enforce naming on .md files outside the root.
 		if filepath.Ext(name) != ".md" {
 			return nil
 		}
 
-		// Root-level markdown files keep their casing.
 		fileDir := filepath.Dir(path)
 		if fileDir == root {
 			return nil
 		}
 
-		// Ecosystem files are always allowed.
 		if ecosystemFiles[name] {
 			return nil
 		}
 
-		// references/ dirs allow SCREAMING-KEBAB (e.g. LANGUAGE.md, ADR-FORMAT.md).
 		inReferences := false
 		for _, part := range parts {
 			if part == "references" {
@@ -135,4 +124,25 @@ func Check(root string) []string {
 	})
 
 	return violations
+}
+
+func main() {
+	root, err := os.Getwd()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
+	}
+
+	violations := check(root)
+	if len(violations) > 0 {
+		fmt.Println("Naming convention violations:")
+		for _, v := range violations {
+			fmt.Printf("  - %s\n", v)
+		}
+		fmt.Println()
+		fmt.Println("Fix by renaming. Directories must be lowercase; markdown files")
+		fmt.Println("in subdirectories must be lowercase kebab-case (e.g. cloud-native.md).")
+		fmt.Println("Ecosystem files keep their casing.")
+		os.Exit(1)
+	}
 }

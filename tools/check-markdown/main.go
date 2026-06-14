@@ -9,8 +9,6 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-
-	"github.com/matthew-a-carr/ai-plugins/tools/mdcheck"
 )
 
 func main() {
@@ -40,7 +38,7 @@ func main() {
 			return nil
 		}
 
-		violations := mdcheck.CheckFile(path)
+		violations := checkFile(path)
 		allViolations = append(allViolations, violations...)
 		return nil
 	})

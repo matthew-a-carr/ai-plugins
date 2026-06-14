@@ -66,8 +66,9 @@ Work style: telegraph; noun-phrases ok; drop grammar; min tokens.
 
 ```sh
 go test ./tools/...                                       # unit tests
-go run ./cmd/validate-plugins                             # validate all plugin.json
-go run ./cmd/check-naming                                 # naming conventions
+go run ./tools/validate-plugins                           # validate all plugin.json
+go run ./tools/check-naming                               # naming conventions
+go run ./tools/check-markdown                             # markdown hygiene
 lefthook install                                          # git hooks (optional)
 ```
 

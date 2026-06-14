@@ -1,12 +1,11 @@
-// Package plugincheck validates .claude-plugin/plugin.json manifests.
-package plugincheck
+// Command validate-plugins discovers and validates all plugin.json manifests.
+package main
 
 import (
 	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
-	"runtime"
 	"sort"
 	"strings"
 )
@@ -14,21 +13,18 @@ import (
 // requiredKeys are the keys every plugin.json must have as non-empty strings.
 var requiredKeys = []string{"description", "name", "version"}
 
-// Validate checks a single plugin.json file and returns a list of problems.
-// An empty slice means the manifest is valid.
-func Validate(path string) []string {
+// validate checks a single plugin.json file and returns a list of problems.
+func validate(path string) []string {
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return []string{fmt.Sprintf("missing %s", path)}
 	}
 
-	// Must parse as JSON.
 	var raw any
 	if err := json.Unmarshal(data, &raw); err != nil {
 		return []string{fmt.Sprintf("%s is not valid JSON: %v", path, err)}
 	}
 
-	// Must be a JSON object.
 	obj, ok := raw.(map[string]any)
 	if !ok {
 		return []string{fmt.Sprintf("%s must contain a JSON object, got %T", path, raw)}
@@ -36,7 +32,6 @@ func Validate(path string) []string {
 
 	var errs []string
 
-	// Check for missing required keys.
 	var missing []string
 	for _, key := range requiredKeys {
 		if _, exists := obj[key]; !exists {
@@ -47,7 +42,6 @@ func Validate(path string) []string {
 		errs = append(errs, fmt.Sprintf("%s missing required keys: %v", path, missing))
 	}
 
-	// Check present required keys are non-empty strings.
 	for _, key := range requiredKeys {
 		val, exists := obj[key]
 		if !exists {
@@ -62,8 +56,8 @@ func Validate(path string) []string {
 	return errs
 }
 
-// DiscoverPlugins finds all plugins/*/.claude-plugin/plugin.json under root.
-func DiscoverPlugins(root string) []string {
+// discoverPlugins finds all plugins/*/.claude-plugin/plugin.json under root.
+func discoverPlugins(root string) []string {
 	pattern := filepath.Join(root, "plugins", "*", ".claude-plugin", "plugin.json")
 	matches, err := filepath.Glob(pattern)
 	if err != nil {
@@ -73,9 +67,35 @@ func DiscoverPlugins(root string) []string {
 	return matches
 }
 
-// RepoRoot returns the repository root by walking up from this source file.
-func RepoRoot() string {
-	_, thisFile, _, _ := runtime.Caller(0)
-	// thisFile is tools/plugincheck/plugincheck.go — go up 3 levels.
-	return filepath.Dir(filepath.Dir(filepath.Dir(thisFile)))
+func main() {
+	root, err := os.Getwd()
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
+	}
+
+	paths := os.Args[1:]
+	if len(paths) == 0 {
+		paths = discoverPlugins(root)
+	}
+	if len(paths) == 0 {
+		fmt.Fprintln(os.Stderr, "no plugin.json files found")
+		os.Exit(1)
+	}
+
+	failed := false
+	for _, path := range paths {
+		errs := validate(path)
+		if len(errs) > 0 {
+			for _, e := range errs {
+				fmt.Fprintln(os.Stderr, e)
+			}
+			failed = true
+		} else {
+			fmt.Printf("%s: ok\n", path)
+		}
+	}
+	if failed {
+		os.Exit(1)
+	}
 }

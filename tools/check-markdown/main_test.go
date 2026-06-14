@@ -1,11 +1,9 @@
-package mdcheck_test
+package main
 
 import (
 	"os"
 	"path/filepath"
 	"testing"
-
-	"github.com/matthew-a-carr/ai-plugins/tools/mdcheck"
 )
 
 func writeFile(t *testing.T, dir, name, content string) string {
@@ -24,7 +22,7 @@ func TestCleanFileHasNoViolations(t *testing.T) {
 	dir := t.TempDir()
 	writeFile(t, dir, "good.md", "# Hello\n\nSome content.\n")
 
-	violations := mdcheck.CheckFile(filepath.Join(dir, "good.md"))
+	violations := checkFile(filepath.Join(dir, "good.md"))
 	if len(violations) != 0 {
 		t.Fatalf("expected no violations, got %v", violations)
 	}
@@ -34,7 +32,7 @@ func TestTrailingWhitespaceDetected(t *testing.T) {
 	dir := t.TempDir()
 	writeFile(t, dir, "bad.md", "# Hello  \n\nTrailing spaces.   \n")
 
-	violations := mdcheck.CheckFile(filepath.Join(dir, "bad.md"))
+	violations := checkFile(filepath.Join(dir, "bad.md"))
 	if len(violations) == 0 {
 		t.Fatal("expected violations for trailing whitespace")
 	}
@@ -49,7 +47,7 @@ func TestHardTabsDetected(t *testing.T) {
 	dir := t.TempDir()
 	writeFile(t, dir, "bad.md", "# Hello\n\n\tindented with tab\n")
 
-	violations := mdcheck.CheckFile(filepath.Join(dir, "bad.md"))
+	violations := checkFile(filepath.Join(dir, "bad.md"))
 	if len(violations) == 0 {
 		t.Fatal("expected violations for hard tabs")
 	}
@@ -68,7 +66,7 @@ func TestMultipleBlankLinesDetected(t *testing.T) {
 	dir := t.TempDir()
 	writeFile(t, dir, "bad.md", "# Hello\n\n\n\nToo many blanks.\n")
 
-	violations := mdcheck.CheckFile(filepath.Join(dir, "bad.md"))
+	violations := checkFile(filepath.Join(dir, "bad.md"))
 	if len(violations) == 0 {
 		t.Fatal("expected violations for multiple blank lines")
 	}
@@ -87,7 +85,7 @@ func TestSingleBlankLineIsAllowed(t *testing.T) {
 	dir := t.TempDir()
 	writeFile(t, dir, "good.md", "# Hello\n\nParagraph one.\n\nParagraph two.\n")
 
-	violations := mdcheck.CheckFile(filepath.Join(dir, "good.md"))
+	violations := checkFile(filepath.Join(dir, "good.md"))
 	if len(violations) != 0 {
 		t.Fatalf("expected no violations, got %v", violations)
 	}
@@ -97,7 +95,7 @@ func TestChangelogIsSkipped(t *testing.T) {
 	dir := t.TempDir()
 	writeFile(t, dir, "CHANGELOG.md", "# Changelog\n\n\n\nBad formatting.\t\n")
 
-	violations := mdcheck.CheckFile(filepath.Join(dir, "CHANGELOG.md"))
+	violations := checkFile(filepath.Join(dir, "CHANGELOG.md"))
 	if len(violations) != 0 {
 		t.Fatalf("expected CHANGELOG to be skipped, got %v", violations)
 	}
@@ -107,7 +105,7 @@ func TestEvalsAreSkipped(t *testing.T) {
 	dir := t.TempDir()
 	writeFile(t, dir, "skills/tdd/evals/scenario-0/task.md", "bad\t\ttabs  \n\n\n\n")
 
-	violations := mdcheck.CheckFile(filepath.Join(dir, "skills/tdd/evals/scenario-0/task.md"))
+	violations := checkFile(filepath.Join(dir, "skills/tdd/evals/scenario-0/task.md"))
 	if len(violations) != 0 {
 		t.Fatalf("expected evals to be skipped, got %v", violations)
 	}
@@ -117,7 +115,7 @@ func TestMultipleViolationsOnOneLine(t *testing.T) {
 	dir := t.TempDir()
 	writeFile(t, dir, "bad.md", "\tbad line with tab and trailing space \n")
 
-	violations := mdcheck.CheckFile(filepath.Join(dir, "bad.md"))
+	violations := checkFile(filepath.Join(dir, "bad.md"))
 	if len(violations) < 2 {
 		t.Fatalf("expected at least 2 violations, got %d: %v", len(violations), violations)
 	}

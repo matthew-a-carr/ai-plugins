@@ -4,6 +4,7 @@ on:
   push:
     branches: [main]
   pull_request:
+
 jobs:
   validate:
     name: Validate
@@ -20,10 +21,10 @@ jobs:
         run: go test ./tools/...
 
       - name: Validate plugin.json manifests
-        run: go run ./cmd/validate-plugins
+        run: go run ./tools/validate-plugins
 
       - name: Check naming conventions
-        run: go run ./cmd/check-naming
+        run: go run ./tools/check-naming
 
       - name: Validate skills (agent-skills)
         working-directory: plugins/agent-skills
@@ -36,4 +37,4 @@ jobs:
           exit "$rc"
 
       - name: Lint markdown
-        run: go run ./cmd/check-markdown
+        run: go run ./tools/check-markdown

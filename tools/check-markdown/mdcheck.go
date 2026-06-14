@@ -6,7 +6,7 @@
 //   - No multiple consecutive blank lines
 //
 // Files named CHANGELOG.md and files under evals/ directories are skipped.
-package mdcheck
+package main
 
 import (
 	"bufio"
@@ -30,8 +30,8 @@ func skipFile(path string) bool {
 	return false
 }
 
-// CheckFile returns a list of violations for a single markdown file.
-func CheckFile(path string) []string {
+// checkFile returns a list of violations for a single markdown file.
+func checkFile(path string) []string {
 	if skipFile(path) {
 		return nil
 	}
