@@ -175,8 +175,8 @@ Run the diff through the `sync-docs` lens (invoke `sync-docs` if available, or
 apply its checks inline). The load-bearing ones, any of which is **Critical**
 if missed:
 
-- A `@travel-planner/shared` wire schema or `/api/v1/*` shape changed but
-  `pnpm openapi:check` would fail / `docs/openapi/v1.yaml` not regenerated.
+- A shared wire schema or public API shape changed but the repo's generated API
+  artifact (e.g. an OpenAPI spec) was not regenerated / its check would fail.
 - A new `AGENTS.md` added without its sibling `CLAUDE.md` symlink.
 - An ADR added / renamed / status-changed without the
   `docs/decisions/README.md` index update.
@@ -197,12 +197,14 @@ entry → **Warning**.
 
 ## Verification evidence
 
-Confirm the PR body (or the run, in self-review) shows the full suite green:
-`pnpm lint && pnpm db:check:migrations && pnpm type-check && pnpm test:unit &&
-pnpm test:integration` plus `pnpm build`. If the PR claims green but the body
-shows no evidence and you can run them, run the subset relevant to the diff
-(per the `AGENTS.md` "what to run" table) and report the real result. A claim
-of green with skipped/failing checks underneath → **Critical**.
+Confirm the PR body (or the run, in self-review) shows the repo's full
+verification suite green — the commands from `docs/agents/verification.md` (the
+`setup-matt-carr-skills` injection point) or the `AGENTS.md` / `CONSTITUTION.md`
+verification table (lint, type-check, unit + integration, build, plus any
+repo-specific checks). If the PR claims green but the body shows no evidence and
+you can run them, run the subset relevant to the diff (per the repo's "what to
+run" table) and report the real result. A claim of green with skipped/failing
+checks underneath → **Critical**.
 
 ## Report
 

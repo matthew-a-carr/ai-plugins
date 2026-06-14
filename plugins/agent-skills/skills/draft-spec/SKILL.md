@@ -208,7 +208,7 @@ In those cases:
 4. Slack DM the configured notify recipient via
    `mcp__claude_ai_Slack__slack_send_message` with `channel:
    "$SLACK_NOTIFY_USER"` and a one-line text payload like:
-   `"travel-planner draft-spec blocked on #<ISSUE_NUMBER>: <reason>.
+   `"<repo> draft-spec blocked on #<ISSUE_NUMBER>: <reason>.
    <link to issue>"`.
    If `$SLACK_NOTIFY_USER` isn't set, fall back to
    `mcp__claude_ai_Slack__slack_search_users` by the operator's email and

@@ -1,6 +1,6 @@
 ---
 name: setup-matt-carr-skills
-description: Sets up an `## Agent skills` block in AGENTS.md/CLAUDE.md and `docs/agents/` so the engineering skills know this repo's issue tracker (GitHub or local markdown), workflow label vocabulary, domain docs, and verification commands. Run before first use of `tdd`, `improve-codebase-architecture`, `grill-with-docs`, or the lifecycle skills (`draft-spec`, `implement-spec`) — or if those skills appear to be missing context about the issue tracker, labels, domain docs, or how to verify a change.
+description: Sets up an `## Agent skills` block in AGENTS.md/CLAUDE.md and `docs/agents/` so the engineering skills know this repo's issue tracker (GitHub or local markdown), workflow label vocabulary, domain docs, and verification commands. Run before first use of `tdd`, `improve-codebase-architecture`, `grill-me`, or the lifecycle skills (`draft-spec`, `implement-spec`) — or if those skills appear to be missing context about the issue tracker, labels, domain docs, or how to verify a change.
 disable-model-invocation: true
 ---
 
@@ -63,7 +63,7 @@ Default: these strings as-is. Ask the user to override any that differ in this r
 
 **Section C — Domain docs.**
 
-> Explainer: Some skills (`improve-codebase-architecture`, `grill-with-docs`, `tdd`) need to learn the project's domain language and read past architectural decisions. They need to know *where those live in this repo*. Don't assume a `CONTEXT.md` exists — name the repo's actual home.
+> Explainer: Some skills (`improve-codebase-architecture`, `grill-me`, `tdd`) need to learn the project's domain language and read past architectural decisions. They need to know *where those live in this repo*. Don't assume a `CONTEXT.md` exists — name the repo's actual home.
 
 Record two things:
 

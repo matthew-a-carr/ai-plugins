@@ -8,7 +8,7 @@ description: >
   version upgrade safely — even if they just say "update everything" or
   "check what's outdated". Patch/minor bumps batch and auto-apply when CI is
   green and release notes are clean; majors get one branch each with a full
-  test gate. Supersedes dependabot-pr-merge.
+  test gate.
 compatibility: Requires authenticated gh CLI, network access, and the project's native package tooling
 ---
 
