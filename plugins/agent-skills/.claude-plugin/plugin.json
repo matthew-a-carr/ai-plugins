@@ -1,6 +1,6 @@
 {
   "name": "agent-skills",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Personal agent skills: development workflow, planning, GitHub helpers, and utilities.",
   "author": {
     "name": "Matthew Carr",
