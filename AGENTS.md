@@ -71,7 +71,6 @@ go run ./cmd/check-naming                                 # naming conventions
 lefthook install                                          # git hooks (optional)
 ```
 
-
 ## Critical thinking
 
 - Fix root cause, not band-aid.

@@ -1,17 +1,30 @@
-# Markdownlint config. Strict enough to catch real issues, lax enough
-# not to fight the way these reference docs are written.
+# Markdownlint config. Only rules that catch genuine mistakes are enabled.
+# Skill files are dense, AI-consumed reference docs — formatting conventions
+# intentionally diverge from typical prose markdown.
 config:
-  # Line length: principles docs frequently exceed 80 chars deliberately.
-  MD013: false
-  # Allow multiple headings with the same content (Patterns reuse "Shape", "References", etc.).
+  # Start with everything off, then enable what matters.
+  default: false
+
+  # --- Enabled: catch real bugs ---
+  # Heading levels should only increment by one (skipping levels is confusing).
+  MD001: true
+  # No duplicate headings (within siblings).
   MD024:
     siblings_only: true
-  # Allow inline HTML — used sparingly for tables / spans where needed.
-  MD033: false
-  # First line doesn't have to be a top-level heading (frontmatter is fine).
-  MD041: false
-  # Bare URLs are fine in reference sections.
-  MD034: false
+  # No trailing spaces (except deliberate line breaks).
+  MD009: true
+  # No hard tabs.
+  MD010: true
+  # No reversed link syntax [](url) vs (url)[text].
+  MD011: true
+  # No multiple consecutive blank lines.
+  MD012: true
+  # No space inside emphasis markers.
+  MD037: true
+  # No space inside link text.
+  MD039: true
+  # Link fragments should be valid.
+  MD051: true
 
 globs:
   - "**/*.md"
@@ -20,3 +33,4 @@ ignores:
   - "node_modules/**"
   - ".git/**"
   - "**/CHANGELOG.md"
+  - "**/evals/**"

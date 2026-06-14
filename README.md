@@ -49,7 +49,7 @@ npx skills@latest add matthew-a-carr/ai-plugins/plugins/agent-skills
 
 ## Repo structure
 
-```
+```text
 ai-plugins/
 ├── .claude-plugin/marketplace.json   # Plugin catalog (points to subdirs)
 ├── plugins/
